@@ -29,7 +29,7 @@ If you are applying for an engineering role, you must at minimum build one or mo
 - Ingest data from Airbnb (`./data/airbnb.csv`)
 - Clean both datasets
 - Identify and address any missing or improper data by designing (and implementing if time permits) a backfill
-strategy
+  strategy
 - Calculate potential revenue per property and per postal code for both rental and Airbnb sources
 - Follow the principles of the [Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture#:~:text=A%20medallion%20architecture%20is%20a%20data%20design%20pattern,%28from%20Bronze%20%E2%87%92%20Silver%20%E2%87%92%20Gold%20layer%20tables%29.)
 
@@ -42,8 +42,9 @@ The following deliverables are expected as part of the project:
 - Documentation for your pipeline (documented in the `README` and `./docs` folders) - **explain the why, not the how**
 - Export of datasets produced by your pipeline, formatted as Parquet files (placed in `./data/output`)
 - Pipeline job configurations (included in the `./resources` folder)
+- Workspace and repository access for the reviewers (see [Sharing your work with the reviewers](#sharing-your-work-with-the-reviewers))
 
-We highly recommend using Databricks, you can set up a [free trial for professional use following Express Setup](https://signup.databricks.com/) or [Databricks Free Edition](https://www.databricks.com/learn/free-edition). However, we are primarily interested in understanding how you work, so feel free to pick a tool with which you are most comfortable—whether it’s a local PySpark instance, or a cloud service. Explain your reasoning.
+We highly recommend using Databricks, you can set up a [free trial for professional use following Express Setup](https://signup.databricks.com/) or [Databricks Free Edition](https://www.databricks.com/learn/free-edition). However, we are primarily interested in understanding how you work, so feel free to pick a tool with which you are most comfortable—whether it’s a local PySpark instance, or a cloud service. Explain your reasoning. If you go with Free Edition, see [Using Databricks Free Edition](#using-databricks-free-edition) below for setup, its limits, and how to share the result with us.
 
 Save everything in a private Git repository and share it with us. Deliver a clean repository: remove any redundant files, replace our README with your own, and provide clear instructions for building and running your project. If unsure how to structure your repository, we recommend starting with our [RevoData Declarative Automation Bundle Templates](https://github.com/revodatanl/revo-dabs). We expect you to spend 3-4 hours on the assessment, so apply your best judgment when prioritizing tasks.
 
@@ -80,6 +81,45 @@ Following are a number of stretch goals of increasing difficulty that will give 
 - [ ] Use the `./data/geo/post_codes.geojson` geographic dataset to enrich the Airbnb data with missing postcodes
 - [ ] - or - Query an external API such as [public.opendatasoft.com](https://public.opendatasoft.com/explore/dataset/georef-netherlands-postcode-pc4/api/) to fill in the missing postcodes using a UDF
 - [ ] Use the `./data/geo/amsterdam_areas.geojson` geographic dataset for your visualization
+
+## Using Databricks Free Edition
+
+[Databricks Free Edition](https://www.databricks.com/learn/free-edition) is enough to complete this assessment end to end: Unity Catalog, serverless compute, Lakeflow jobs and declarative pipelines, dashboards, Git folders and Databricks Asset Bundles are all available, and unlike the Express Setup trial it does not expire. Sign up, create your workspace, and work out the setup from the Databricks documentation, getting from an empty workspace to a deployed pipeline is part of what we are assessing.
+
+A few characteristics of Free Edition are worth knowing _before_ you design your solution, because they will influence your choices:
+
+- Compute is serverless only — there are no clusters to configure.
+- There are quotas on concurrent job tasks, on active pipelines per type, and on SQL warehouse size.
+- Only Python and SQL are supported.
+- There is no account console; everything is administered from inside the single workspace.
+- Outbound internet access is restricted by default, which matters both for calling external APIs and for tooling that downloads dependencies at deploy time.
+
+The [Free Edition limitations](https://docs.databricks.com/aws/en/getting-started/free-edition-limitations) documentation has the authoritative list. We are not looking for you to beat the quotas: if one of them forces a design compromise, tell us what you did instead and why.
+
+## Sharing your work with the reviewers
+
+Part of the deliverable is that we can open what you built and read the code behind it, without asking you for a screen share. Give **both** of the following people access to **both** the workspace and the repository:
+
+- `h.hegge@fugro.com`
+- `m.sajadian@fugro.com`
+
+Concretely, we expect:
+
+1. **Workspace access.** Both added as users of your Free Edition workspace. Note that Free Edition lets a workspace admin add users but not remove them again, so add only these two addresses.
+2. **`CAN_MANAGE` on every asset bundle resource.** Jobs, pipelines, dashboards and the bundle's workspace folder. Prefer declaring this in your bundle configuration over clicking through the UI — it is reproducible, it is reviewable, and it is redeployed with the rest of your code. Tell us which target you deployed if it is not the default one.
+3. **Access to the data.** Workspace permissions do not cover Unity Catalog objects; the catalog and schemas holding your bronze, silver and gold tables need their own grants.
+4. **GitHub access.** The repository stays private; add both as collaborators with a role that lets them see the settings and CI runs as well as the code. Ask us for their GitHub handles if you do not have them.
+
+Also make sure the repository actually contains everything: the bundle configuration, the notebooks, the `src` package, the tests, the Parquet exports, the docs, and the Markdown export of your AI tool session(s).
+
+### Access checklist
+
+- [ ] `h.hegge@fugro.com` added as a user in the Databricks workspace
+- [ ] `m.sajadian@fugro.com` added as a user in the Databricks workspace
+- [ ] Both have `CAN_MANAGE` on every asset bundle resource, applied through the bundle and redeployed
+- [ ] Both have grants on the catalog/schemas holding your bronze, silver and gold tables
+- [ ] Both are collaborators on the private GitHub repository
+- [ ] The workspace URL and the repository URL are shared with us by email
 
 ## Review
 
