@@ -1,4 +1,4 @@
-# RevoData's Technical Assessment
+# Technical Assessment
 
 ## Introduction
 
